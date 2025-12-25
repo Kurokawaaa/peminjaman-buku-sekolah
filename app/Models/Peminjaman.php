@@ -13,6 +13,7 @@ class peminjaman extends Model
         "nama_buku",
         "banyak_buku",
         "status",
-        "lama_meminjam"
+        "lama_meminjam",
+        "email"
         ];
 }

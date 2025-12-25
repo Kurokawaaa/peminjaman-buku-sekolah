@@ -61,15 +61,16 @@
                     </div>
 
                     <!-- Nama Buku -->
-                    <div class="mb-3">
-                        <label class="form-label">Nama Buku</label>
-                        <select name="nama_buku" class="form-select" required>
-                            <option value="">-- Pilih Buku --</option>
-                            <option value="Laravel Dasar">Laravel Dasar</option>
-                            <option value="Pemrograman Web">Pemrograman Web</option>
-                            <option value="Basis Data">Basis Data</option>
-                        </select>
-                    </div>
+                    <label class="form-label">Nama Buku</label>
+                    <select name="kode_buku" class="form-select" required>
+                        <label class="form-label">Buku</label>
+                        <option value="">-- Pilih Buku --</option>
+                            @foreach ($books as $book)
+                            <option value="{{ $book->kode_buku }}">
+                            {{ $book->kode_buku }} - {{ $book->nama_buku }}
+                        </option>
+                            @endforeach
+                    </select>
 
                     <!-- Jumlah -->
                     <div class="mb-3">
@@ -81,6 +82,12 @@
                     <div class="mb-4">
                         <label class="form-label">Lama Meminjam (Jam)</label>
                         <input type="number" name="lama_meminjam" class="form-control" min="1" required>
+                    </div>
+
+                    <!-- EMail -->
+                    <div class="mb-4">
+                        <label class="form-label">Email</label>
+                        <input type="email" name="email" class="form-control" required>
                     </div>
 
                     <!-- Button -->

@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('kategori');
             $table->string('penulis');
             $table->integer('jumlah');
+            $table->integer("jumlah_dipinjam");
             $table->timestamps();
         });
     }
