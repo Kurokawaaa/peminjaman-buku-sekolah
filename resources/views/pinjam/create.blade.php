@@ -4,10 +4,11 @@
     <meta charset="UTF-8">
     <title>Form Peminjaman Buku</title>
 
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
-    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 
     <style>
@@ -25,6 +26,29 @@
             border-radius: 10px;
             padding: 10px;
             font-weight: 600;
+        }
+        .select2-container--default .select2-selection--single {
+            height: 38px;
+            padding: 6px 12px;
+            border: 1px solid #ced4da;
+            border-radius: 10px;
+        }
+
+        .select2-container--default .select2-selection--single .select2-selection__rendered {
+            line-height: 24px;
+            padding-left: 0;
+        }
+
+        .select2-container--default .select2-selection--single .select2-selection__arrow {
+            height: 36px;
+            right: 10px;
+        }
+
+        .select2-container--default .select2-search--dropdown .select2-search__field {
+            height: 38px;
+            padding: 6px 12px;
+            border-radius: 10px;
+            border: 1px solid #ced4da;
         }
     </style>
 </head>
@@ -61,16 +85,13 @@
                     </div>
 
                     <!-- Nama Buku -->
+                    <div class="mb-3">
                     <label class="form-label">Nama Buku</label>
-                    <select name="kode_buku" class="form-select" required>
-                        <label class="form-label">Buku</label>
-                        <option value="">-- Pilih Buku --</option>
-                            @foreach ($books as $book)
-                            <option value="{{ $book->kode_buku }}">
-                            {{ $book->kode_buku }} - {{ $book->nama_buku }}
-                        </option>
-                            @endforeach
-                    </select>
+
+                    <select name="kode_buku" id="buku" class="form-select" required></select>
+                    </div>
+
+
 
                     <!-- Jumlah -->
                     <div class="mb-3">
@@ -105,6 +126,32 @@
         </div>
     </div>
 </div>
+
+<script>
+$(document).ready(function() {
+    $('#buku').select2({
+        placeholder: 'Ketik nama buku...',
+        allowClear: true,
+        minimumInputLength: 1,
+        ajax: {
+            url: '{{ route("ajax.books") }}',
+            dataType: 'json',
+            delay: 250,
+            data: function (params) {
+                return {
+                    q: params.term
+                };
+            },
+            processResults: function (data) {
+                return {
+                    results: data
+                };
+            }
+        }
+    });
+});
+</script>
+
 
 </body>
 </html>
