@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 use App\Models\Peminjaman;
 use App\Models\Books;
+use Illuminate\Support\Facades\DB;
 
 use Illuminate\Http\Request;
 
@@ -39,17 +40,27 @@ public function store(Request $request)
         "lama_meminjam" => "required|integer",
     ]);
 
-    
-    $book = Books::where('kode_buku', $request->kode_buku)->first();
+    DB::transaction(function () use ($request){
 
-    Peminjaman::create([
-        'nama_peminjam' => $request->nama_peminjam,
-        'kelas'         => $request->kelas,
-        'nama_buku'     => $book->nama_buku, 
-        'banyak_buku'   => $request->banyak_buku,
-        'lama_meminjam' => $request->lama_meminjam,
-        'email'         => $request->email ?? null,
-    ]);
+        $book = Books::where('kode_buku', $request->kode_buku)->first();
+
+        if($book->jumlah - $book->jumlah_dipinjam < $request->banyak_buku){
+            throw new \Exception('stok buku tidak mencukupi');
+        }
+
+        Peminjaman::create([
+            'nama_peminjam' => $request->nama_peminjam,
+            'kelas'         => $request->kelas,
+            'nama_buku'     => $book->nama_buku, 
+            'banyak_buku'   => $request->banyak_buku,
+            'lama_meminjam' => $request->lama_meminjam,
+            'email'         => $request->email ?? null,
+        ]);
+        $book->increment('jumlah_dipinjam', $request->banyak_buku);
+
+    });
+
+    
 
     return redirect()
         ->route('pinjam.create')
